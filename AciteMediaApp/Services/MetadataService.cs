@@ -119,15 +119,9 @@ namespace AciteMediaApp.Services
                 return [];
 
             var fr = r.Where(x => x.Split('/')[0] == vclass || vclass == "").ToList();
-            fr.Sort((a, b) => alphanumComparator.Compare(a, b));
+            fr.Sort((a, b) => alphanumComparator.Compare(a, b));         
 
-            List<string> videos = new();
-            foreach (var v in fr)
-            {
-                videos.Add(v);
-            }
-
-            return videos.ToArray();
+            return fr.ToArray();
         }
 
         public async Task<Video> ResloveVideosAsync(string v)

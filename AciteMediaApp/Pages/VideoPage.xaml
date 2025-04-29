@@ -52,7 +52,7 @@
 
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="models:Video">
-                        <Border Margin="0, 2" Padding="2" HeightRequest="115" WidthRequest="200">
+                        <Border Margin="0, 2" Padding="2" HeightRequest="115" WidthRequest="160">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
                             </Border.GestureRecognizers>

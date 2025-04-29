@@ -36,13 +36,16 @@ namespace AciteMediaApp.PageModels
 
             var c = await _metadataService.GetVideoClasses();
             Collections.Clear();
+            Videos.Clear();
 
-            foreach(var i in c)
+            foreach (var i in c)
             {
                 Collections.Add(i);
             }
 
-            var t = await _metadataService.GetVideos("");
+            SelectedCollection = c.Any() ? c[0] : "";
+
+            var t = await _metadataService.GetVideos(SelectedCollection);
             foreach (var v in t)
             {
                 Videos.Add(await _metadataService.ResloveVideosAsync(v));
@@ -52,9 +55,16 @@ namespace AciteMediaApp.PageModels
         }
 
         [RelayCommand]
-        public void OnFilter()
+        public async Task OnFilter()
         {
+            Videos.Clear();
+            var t = await _metadataService.GetVideos(SelectedCollection);
 
+            foreach (var v in t)
+            {
+                if(v.Contains(SearchKeyword) || SearchKeyword == "")
+                    Videos.Add(await _metadataService.ResloveVideosAsync(v));
+            }
         }
     }
 }
