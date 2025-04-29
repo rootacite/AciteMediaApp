@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"        
+             xmlns:models="clr-namespace:AciteMediaApp.Models"
+             xmlns:pageModels="clr-namespace:AciteMediaApp.PageModels"   
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AciteMediaApp.Pages.ComicViewer"
+             xmlns:sf="clr-namespace:AciteMediaApp.Pages.Controls"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"        
+             xmlns:material="http://schemas.enisn-projects.io/dotnet/maui/uraniumui/material"
+             Title="{Binding Name}" x:DataType="pageModels:ComicViewerModel" x:Name="viewPage">
+    <ContentPage.Resources>
+        <ControlTemplate x:Key="FrameTemplate">
+            <Border VerticalOptions="Center" x:DataType="models:ComicPage" Margin="0, 6" Padding="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    
+                    <Image Grid.Row="0" Grid.RowSpan="2" Source="{Binding Page}"
+                            Aspect="AspectFit"/>
+                    <Border 
+                            BackgroundColor="Gray" 
+                            Opacity="0.8"
+                            StrokeShape="RoundRectangle 7"
+                            Padding="3,3"
+                            HorizontalOptions="End"
+                            Margin="10,10,0,0"  IsVisible="{Binding DiskCached}">
+                        <Label Text="Disk Cached" LineHeight="0.75"
+                                TextColor="White"
+                                FontSize="Small"
+                                FontAttributes="Bold" 
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center">
+                        </Label>
+                    </Border>
+
+                    <Border 
+                            BackgroundColor="Gray" 
+                            Opacity="0.8"
+                            StrokeShape="RoundRectangle 7"
+                            Padding="3,3"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Start"
+                            Margin="10,10,0,0">
+                        <Label Text="{Binding PageNumber}" LineHeight="0.75"
+                                TextColor="White"
+                                FontSize="Small"
+                                FontAttributes="Bold" 
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center">
+                        </Label>
+                    </Border>
+                </Grid>
+            </Border>
+        </ControlTemplate>
+    </ContentPage.Resources>
+
+    <ContentPage.Behaviors>
+        
+    </ContentPage.Behaviors>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="70" />
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0" HorizontalOptions="End" VerticalOptions="Start" Text="Download" Command="{Binding DownloadCommand}"/>
+        
+        <Grid Grid.Row="1" x:Name="ImageCollection" Margin="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            <Grid.GestureRecognizers>
+                <SwipeGestureRecognizer Command="{Binding NextCommand}" Direction="Left" Threshold="30"/>
+                <SwipeGestureRecognizer Command="{Binding PreviousCommand}" Direction="Right" Threshold="30"/>
+            </Grid.GestureRecognizers>
+        </Grid>
+
+        <Grid Grid.Row="2" Padding="1" VerticalOptions="End">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            <Border Margin="2" Grid.Row="0" BackgroundColor="Gray" Opacity="0.8" StrokeShape="RoundRectangle 7" Padding="3,3" HorizontalOptions="Start" VerticalOptions="Start">
+                <Label Text="{Binding TempPage}" FontSize="Small" x:Name="PageTemp"/>
+            </Border>
+            <sf:DiscreteSlider Minimum="1" Maximum="{Binding PageCount}" Value="{Binding TempPage}"
+                               DragCompletedCommand="{Binding JumpCommand}" Grid.Row="1" VerticalOptions="End"/>
+        </Grid>
+    </Grid>
+</ContentPage>

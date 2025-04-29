@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"   
+             xmlns:models="clr-namespace:AciteMediaApp.Models"
+             xmlns:pageModels="clr-namespace:AciteMediaApp.PageModels" 
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"        
+             x:Class="AciteMediaApp.Pages.DetailPage" x:DataType="pageModels:DetailPageModel"
+             Title="{Binding Name}">
+    <Grid Padding="2">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="250" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" x:Name="Titles" HeightRequest="250" BackgroundColor="Gray" StrokeShape="RoundRectangle 7" Padding="3,3" Stroke="Gray" StrokeThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border Margin="2, 2" Padding="2">
+                    <Image HorizontalOptions="Start" VerticalOptions="Center" Source="{Binding Content.CoverImage}"/>
+                </Border>
+                <Grid Margin="2, 2" Padding="2" Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <Border Margin="3" Padding="5" Background="#404040" StrokeShape="RoundRectangle 5" Grid.Column="0" Grid.Row="0">
+                        <Label VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Text="{Binding Content.Name, StringFormat='Name: {0}'}" TextColor="White" FontSize="Small" LineBreakMode="WordWrap" LineHeight="0.8"/>
+                    </Border>
+
+                    <Border Margin="3" Padding="5"  Background="#404040" StrokeShape="RoundRectangle 5" Grid.Column="0" Grid.Row="1">
+                        <Label VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Text="{Binding Content.TotalPages, StringFormat='Count: {0}'}" TextColor="White" FontSize="Medium" LineBreakMode="WordWrap" LineHeight="0.8"/>
+                    </Border>
+
+                    <Border Margin="3" Padding="5"  Background="#404040" StrokeShape="RoundRectangle 5" Grid.Column="0" Grid.Row="2">
+                        <Label VerticalTextAlignment="Center" HorizontalTextAlignment="Center" Text="{Binding Content.Progress, StringFormat='Progress: {0}'}" TextColor="White" FontSize="Medium" LineBreakMode="WordWrap" LineHeight="0.8"/>
+                    </Border>
+
+                    <Button Margin="3" Grid.Row="3" Text="Continue" Clicked="OnStart"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" x:Name="Chapters" Margin="0, 5, 0, 0" BackgroundColor="Gray" StrokeShape="RoundRectangle 7" Padding="3,3" Stroke="Gray" StrokeThickness="1">
+            <Grid Margin="5,5,5,5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Grid.Row="0" Background="#303030" StrokeShape="RoundRectangle 20"> 
+                    <Label Text="Chapters" FontSize="Medium" TextColor="White" HorizontalTextAlignment="Center" FontAttributes="Bold"/>
+                </Border>
+                <CollectionView Grid.Row="1"  VerticalScrollBarVisibility="Always" ItemsSource="{Binding Marks}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:ComicMarks">
+                            <Border Background="#404040" StrokeShape="RoundRectangle 5" Padding="5" Margin="5, 5">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+                                </Border.GestureRecognizers>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Margin="0" Padding="0">
+                                        <Image HorizontalOptions="Start" VerticalOptions="Start" Source="{Binding PageContent}" Grid.Column="0"/>
+                                    </Border>
+                                    <Label Text="{Binding Name}" Margin="5" Grid.Column="1" HorizontalOptions="Center" LineBreakMode="WordWrap" VerticalOptions="Center" FontSize="Medium" FontAttributes="Bold"/>
+                                </Grid>
+                            </Border>
+                            
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>
