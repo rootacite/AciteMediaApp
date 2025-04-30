@@ -1,0 +1,107 @@
+@page "/Video"
+
+@rendermode InteractiveServer
+@inject HttpClient http
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+@using MudBlazor
+@using MudBlazor.Services
+@using Microsoft.AspNetCore.WebUtilities
+
+<style>
+    .mud-image {
+        max-width: 100%;         /* 图片最大宽度为容器宽度 */
+        max-height: 100%;        /* 图片最大高度为容器高度 */
+        object-fit: contain;     /* 保持图片比例，不拉伸 */
+    }
+
+    .root-element {
+        width: 100%;
+        height: 90vh;
+        overflow: scroll;
+        display: flex;         /* 使用 Flexbox 布局 */
+        justify-content: center; /* 水平居中 */
+        align-items: baseline;     /* 垂直居中 */
+    }
+
+    .click-animation {
+        transition: transform 0.1s ease-in-out;
+    }
+
+    .click-animation:active {
+        transform: scale(0.95);
+    }
+</style>
+
+<script>
+    function downloadFile(url, fileName) {
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = fileName || 'download';
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+    }
+
+    function openInNewTab(url) {
+        window.open(url, '_blank');
+    }
+</script>
+
+<!-- <MudTreeView Hover ReadOnly="false" @bind-SelectedValue="SelectedValue" SelectionMode="@SelectionMode">
+        @foreach (var v in _videos)
+        {
+            <MudTreeViewItem Value="@v" Icon="@Icons.Custom.FileFormats.FileVideo" OnClick="Play"/>
+        }
+    </MudTreeView> -->
+<MudStack Spacing="2"  style="align-items: center; place-items: center; width: 95vh;">
+    @for (int j=0;j<_videos.Count;j++)
+    {
+        string im = $"{http.BaseAddress}api/video/file?file={_images[j]}";
+        string vn = _videos[j];
+        string title = $"{vn.Split("/")[0]}";
+        <MudPaper @onclick="@(async () => { await Play(vn); })" Class="click-animation" Width="90%" Height="100px" Style="background: antiquewhite;  align-items: center; overflow: hidden;">
+            <MudStack Row="true" Style="width: 100%; height: 100%;">
+                <MudImage Style="max-width: 40%; max-height: 100%; object-fit: contain;" Src="@im"  Elevation="25" Class="ma-1 mud-image rounded-lg"/>
+                <MudStack Row="false" style="width: 60%; height: 100%; align-items: center; justify-content: center;">
+                    <label style="color: black; font-weight: bold">@title</label>
+                    <label style="color: black; font-weight: bold;">@vn.Split("/")[1]</label>
+                </MudStack>
+            </MudStack>
+        </MudPaper>
+    }
+</MudStack>
+
+@code {
+    List<string> _videos = new();
+    List<string> _images = new();
+    string vp = "";
+    private AlphanumComparator _aa = new AlphanumComparator();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        QueryHelpers.ParseQuery(uri.Query).TryGetValue("colc", out var colc);
+        
+        string sV = "";
+        _videos = await http.GetFromJsonAsync<List<string>>($"api/video/collections");
+        if(_videos is null) return;
+        _videos = _videos.Where(x => x.Split("/")[0] == colc).ToList();
+        _videos.Sort((a, b) => _aa.Compare(a, b));
+        foreach (var video in _videos)
+        {
+            _images.Add(Path.ChangeExtension(video, ".jpg"));
+        }
+
+        StateHasChanged();
+    }
+
+    async Task Play(string uri)
+    {
+        // await JSRuntime.InvokeVoidAsync("downloadFile", $"{http.BaseAddress}api/video/file?file={SelectedValue}", "video.mp4");
+        var videoUri = $"{http.BaseAddress}api/video/file?file={uri}";
+        // Navigation.NavigateTo($"{http.BaseAddress}VideoPlayer?src={videoUri}");
+        await JSRuntime.InvokeVoidAsync("openInNewTab", $"{http.BaseAddress}VideoPlayer?src={videoUri}");
+    }
+}

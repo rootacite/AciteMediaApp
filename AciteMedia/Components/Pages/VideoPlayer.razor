@@ -1,0 +1,27 @@
+@page "/VideoPlayer"
+@inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.WebUtilities
+
+@if (inited)
+{
+    <video style="width:100%;" controls>
+        <source src="@sources" type="video/mp4">
+    </video>
+}
+
+@code{
+    bool inited = false;
+    private string sources = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        QueryHelpers.ParseQuery(uri.Query).TryGetValue("src", out var srcValue);
+
+        sources = srcValue;
+        inited = true;
+        StateHasChanged();
+
+    }
+}

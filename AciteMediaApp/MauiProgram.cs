@@ -2,6 +2,7 @@
 using AciteMediaApp.Services.Interfaces;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using MR.Gestures;
 using Syncfusion.Maui.Toolkit.Hosting;
 
 namespace AciteMediaApp
@@ -15,6 +16,7 @@ namespace AciteMediaApp
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkitMediaElement()
                 .UseMauiCommunityToolkit()
+                .ConfigureMRGestures()
                 .ConfigureSyncfusionToolkit()
                 .ConfigureMauiHandlers(handlers =>
                 {
